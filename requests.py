@@ -50,6 +50,9 @@ class RequestsWindow(QWidget):
         generate_button = QPushButton('Сгенерировать запросы')
         generate_button.clicked.connect(self.generate_queries)
 
+        reset_id_button = QPushButton('Обнулить id')
+        reset_id_button.clicked.connect(self.reset_id)
+
         form_layout = QFormLayout()
         form_layout.addRow(method_label, method_combobox)
         form_layout.addRow(num_queries_label, self.num_queries_spinbox)
@@ -57,6 +60,7 @@ class RequestsWindow(QWidget):
         layout.addLayout(form_layout)
         layout.addWidget(query_types_groupbox)
         layout.addWidget(generate_button)
+        layout.addWidget(reset_id_button)
 
         self.setLayout(layout)
 
