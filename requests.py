@@ -27,7 +27,7 @@ class RequestsWindow(QWidget):
         self.num_queries_spinbox = QSpinBox()
         self.num_queries_spinbox.setRange(1, 1000)
 
-        query_types_groupbox = QGroupBox('Типы запросов:')
+        self.query_types_groupbox = QGroupBox('Типы запросов:')
         query_types_layout = QVBoxLayout()
 
         self.select_checkbox = QCheckBox('SELECT')
@@ -40,7 +40,12 @@ class RequestsWindow(QWidget):
         query_types_layout.addWidget(self.update_checkbox)
         query_types_layout.addWidget(self.delete_checkbox)
 
-        query_types_groupbox.setLayout(query_types_layout)
+        self.query_types_groupbox.setLayout(query_types_layout)
+
+        self.manual_query_input = QTextEdit()
+        self.manual_query_input.setPlaceholderText("Введите ваш запрос здесь...")
+        self.manual_query_input.hide()
+        self.manual_query_input.setFixedHeight(200)
 
         generate_button = QPushButton('Сгенерировать запросы')
         generate_button.clicked.connect(self.generate_queries)
