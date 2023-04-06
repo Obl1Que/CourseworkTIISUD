@@ -17,10 +17,11 @@ class RequestsWindow(QWidget):
         layout = QVBoxLayout()
 
         method_label = QLabel('Метод генерации:')
-        method_combobox = QComboBox()
-        method_combobox.addItem('Автоматический')
-        method_combobox.addItem('Ручной')
-        method_combobox.addItem('Комбинированный')
+        self.method_combobox = QComboBox()
+        self.method_combobox.addItem('Автоматический')
+        self.method_combobox.addItem('Ручной')
+
+        self.method_combobox.currentIndexChanged.connect(self.update_method)
 
         num_queries_label = QLabel('Количество запросов:')
         self.num_queries_spinbox = QSpinBox()
