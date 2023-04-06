@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QSpinBox, QVBoxLayout, QFormLayout, QCheckBox, QGroupBox, QPushButton
+from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QSpinBox, QVBoxLayout, QFormLayout, QCheckBox, QGroupBox, QPushButton, QTextEdit
 import pymysql
 import json
 import random as rd
@@ -90,40 +90,123 @@ class RequestsWindow(QWidget):
 
             try:
                 with connection.cursor() as cursor:
-                    try:
-                        if self.select_checkbox.isChecked():
-                            pass
-                        if self.insert_checkbox.isChecked():
-                            cursor.execute("SHOW TABLES")
-                            tables = cursor.fetchall()
+                    if self.method_combobox.currentIndex() == 1:
+                        try:
+                            cursor.execute(manual_query)
+                            connection.commit()
+                        except Exception as e:
+                            print("Ошибка при выполнении запроса:", e)
 
-                            for table in tables:
-                                cursor.execute(f"SHOW COLUMNS FROM {table[0]}")
-                                columns = cursor.fetchall()
-
-                                non_autoincrement_columns = [column for column in columns if column[5] != 'auto_increment']
-                                column_names = ', '.join([column[0] for column in non_autoincrement_columns])
+                    else:
+                        try:
+                            if self.select_checkbox.isChecked():
+                                cursor.execute("SHOW TABLES")
+                                tables = cursor.fetchall()
 
                                 for _ in range(num_queries):
-                                    values = []
+                                    table = rd.choice(tables)[0]
 
-                                    for column in non_autoincrement_columns:
-                                        if column[1].lower().startswith('int'):
-                                            values.append(str(rd.randint(0, 1000000)))
-                                        elif column[1].lower().startswith('text'):
-                                            values.append(f"'{functions.generate_string()}'")
+                                    cursor.execute(f"SHOW COLUMNS FROM {table}")
+                                    columns = cursor.fetchall()
 
-                                    values_str = ', '.join(values)
-                                    insert_query = f"INSERT INTO {table[0]} ({column_names}) VALUES ({values_str})"
-                                    cursor.execute(insert_query)
+                                    num_columns = rd.randint(1, len(columns))
+
+                                    selected_columns = rd.sample(columns, num_columns)
+                                    column_names = ', '.join([column[0] for column in selected_columns])
+
+                                    select_query = f"SELECT {column_names} FROM {table}"
+                                    cursor.execute(select_query)
+                                    result = cursor.fetchall()
+
+                            if self.insert_checkbox.isChecked():
+                                cursor.execute("SHOW TABLES")
+                                tables = cursor.fetchall()
+
+                                for table in tables:
+                                    cursor.execute(f"SHOW COLUMNS FROM {table[0]}")
+                                    columns = cursor.fetchall()
+
+                                    non_autoincrement_columns = [column for column in columns if column[5] != 'auto_increment']
+                                    column_names = ', '.join([column[0] for column in non_autoincrement_columns])
+
+                                    for _ in range(num_queries):
+                                        values = []
+
+                                        for column in non_autoincrement_columns:
+                                            if column[1].lower().startswith('int'):
+                                                values.append(str(rd.randint(0, 1000000)))
+                                            elif column[1].lower().startswith('text'):
+                                                values.append(f"'{functions.generate_string()}'")
+
+                                        values_str = ', '.join(values)
+                                        insert_query = f"INSERT INTO {table[0]} ({column_names}) VALUES ({values_str})"
+                                        cursor.execute(insert_query)
+                                        connection.commit()
+
+                            if self.update_checkbox.isChecked():
+                                cursor.execute("SHOW TABLES")
+                                tables = cursor.fetchall()
+
+                                for _ in range(num_queries):
+                                    table = rd.choice(tables)[0]
+
+                                    cursor.execute(f"SHOW COLUMNS FROM {table}")
+                                    columns = cursor.fetchall()
+
+                                    num_columns = rd.randint(1, len(columns))
+
+                                    selected_columns = rd.sample(columns, num_columns)
+
+                                    update_parts = []
+                                    for column in selected_columns:
+                                        if not column[0].lower().startswith('id'):
+                                            if column[1].lower().startswith('int'):
+                                                new_value = str(rd.randint(0, 1000000))
+                                            elif column[1].lower().startswith('text'):
+                                                new_value = f"'test-{functions.generate_string()}'"
+                                            update_parts.append(f"{column[0]} = {new_value}")
+
+                                    if len(update_parts) > 0:
+                                        update_str = ', '.join(update_parts)
+                                        cursor.execute(f"SELECT id FROM {table}")
+                                        rows = cursor.fetchall()
+                                        if len(rows) > 0:
+                                            id_value = rd.choice(rows)[0]
+                                            print(f"UPDATE {table} SET {update_str} WHERE id = {id_value}")
+                                            update_query = f"UPDATE {table} SET {update_str} WHERE id = {id_value}"
+                                            cursor.execute(update_query)
+                                            connection.commit()
+
+                            if self.delete_checkbox.isChecked():
+                                cursor.execute("SHOW TABLES")
+                                tables = cursor.fetchall()
+
+                                for _ in range(num_queries):
+                                    table = rd.choice(tables)[0]
+
+                                    cursor.execute(f"SHOW COLUMNS FROM {table}")
+                                    columns = cursor.fetchall()
+
+                                    delete_query = f"DELETE FROM {table}"
+                                    where_conditions = []
+
+                                    cursor.execute(f"SELECT id FROM {table}")
+                                    rows = cursor.fetchall()
+                                    id_value = rd.choice(rows)[0]
+
+                                    for column in columns:
+                                        if column[0].lower().startswith('id'):
+                                            where_conditions.append( f"{column[0]} = {id_value}")
+
+                                    if len(where_conditions) > 0:
+                                        where_str = ' AND '.join(where_conditions)
+                                        delete_query += f" WHERE {where_str}"
+                                    print(delete_query)
+                                    cursor.execute(delete_query)
                                     connection.commit()
 
-                        if self.update_checkbox.isChecked():
-                            pass
-                        if self.delete_checkbox.isChecked():
-                            pass
-                    except Exception as e:
-                        print("Ошибка при выполнении запроса:", e)
+                        except Exception as e:
+                            print("Ошибка при выполнении запроса:", e)
             finally:
                 connection.close()
         except Exception as ex:
