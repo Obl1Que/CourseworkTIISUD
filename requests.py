@@ -54,16 +54,24 @@ class RequestsWindow(QWidget):
         reset_id_button.clicked.connect(self.reset_id)
 
         form_layout = QFormLayout()
-        form_layout.addRow(method_label, method_combobox)
+        form_layout.addRow(method_label, self.method_combobox)
         form_layout.addRow(num_queries_label, self.num_queries_spinbox)
 
         layout.addLayout(form_layout)
-        layout.addWidget(query_types_groupbox)
+        layout.addWidget(self.query_types_groupbox)
+        layout.addWidget(self.manual_query_input)
         layout.addWidget(generate_button)
         layout.addWidget(reset_id_button)
 
         self.setLayout(layout)
 
+    def update_method(self, index):
+        if index == 1:
+            self.manual_query_input.show()
+            self.query_types_groupbox.hide()
+        else:
+            self.manual_query_input.hide()
+            self.query_types_groupbox.show()
     def generate_queries(self):
         try:
             with open('settings_glob.json') as f:
@@ -78,6 +86,7 @@ class RequestsWindow(QWidget):
             )
 
             num_queries = self.num_queries_spinbox.value()
+            manual_query = self.manual_query_input.toPlainText()
 
             try:
                 with connection.cursor() as cursor:
