@@ -119,3 +119,32 @@ class RequestsWindow(QWidget):
                 connection.close()
         except Exception as ex:
             print(ex)
+
+    def reset_id(self):
+        try:
+            with open('settings_glob.json') as f:
+                settings = json.load(f)
+
+            connection = pymysql.connect(
+                host=settings["host"],
+                port=int(settings["port"]),
+                user=settings["user"],
+                password=settings["password"],
+                database=settings["database"]
+            )
+
+            try:
+                with connection.cursor() as cursor:
+                    cursor.execute("SHOW TABLES")
+                    tables = cursor.fetchall()
+
+                    for table in tables:
+                        cursor.execute(f"ALTER TABLE {table[0]} AUTO_INCREMENT = 1")
+                        connection.commit()
+
+            except Exception as e:
+                print("Ошибка при выполнении запроса:", e)
+            finally:
+                connection.close()
+        except Exception as ex:
+            print(ex)
