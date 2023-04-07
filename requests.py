@@ -208,7 +208,8 @@ class RequestsWindow(QWidget):
                                     if len(where_conditions) > 0:
                                         where_str = ' AND '.join(where_conditions)
                                         delete_query += f" WHERE {where_str}"
-                                    print(delete_query)
+                                    self.log.add(delete_query)
+                                    self.log.save("requests.log")
                                     cursor.execute(delete_query)
                                     connection.commit()
 
