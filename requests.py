@@ -116,8 +116,11 @@ class RequestsWindow(QWidget):
                                     column_names = ', '.join([column[0] for column in selected_columns])
 
                                     select_query = f"SELECT {column_names} FROM {table}"
+                                    self.log.add(f"SELECT {column_names} FROM {table}")
                                     cursor.execute(select_query)
                                     result = cursor.fetchall()
+                                    self.log.add(result, _type = "r")
+                                    self.log.save("requests.log")
 
                             if self.insert_checkbox.isChecked():
                                 cursor.execute("SHOW TABLES")
