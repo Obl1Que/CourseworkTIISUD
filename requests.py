@@ -144,6 +144,8 @@ class RequestsWindow(QWidget):
 
                                         values_str = ', '.join(values)
                                         insert_query = f"INSERT INTO {table[0]} ({column_names}) VALUES ({values_str})"
+                                        self.log.add(f"INSERT INTO {table[0]} ({column_names}) VALUES ({values_str})")
+                                        self.log.save("requests.log")
                                         cursor.execute(insert_query)
                                         connection.commit()
 
