@@ -178,10 +178,11 @@ class RequestsWindow(QWidget):
                                         rows = cursor.fetchall()
                                         if len(rows) > 0:
                                             id_value = rd.choice(rows)[0]
-                                            print(f"UPDATE {table} SET {update_str} WHERE id = {id_value}")
                                             update_query = f"UPDATE {table} SET {update_str} WHERE id = {id_value}"
+                                            self.log.add(f"UPDATE {table} SET {update_str} WHERE id = {id_value}")
                                             cursor.execute(update_query)
                                             connection.commit()
+                                    self.log.save("requests.log")
 
                             if self.delete_checkbox.isChecked():
                                 cursor.execute("SHOW TABLES")
