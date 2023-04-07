@@ -64,6 +64,7 @@ class RequestsWindow(QWidget):
         layout.addWidget(reset_id_button)
 
         self.setLayout(layout)
+        self.log = functions.logger()
 
     def update_method(self, index):
         if index == 1:
