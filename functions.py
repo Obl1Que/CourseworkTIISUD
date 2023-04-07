@@ -46,3 +46,9 @@ def generate_string():
         this_string += random.choice(list(string.ascii_lowercase + '0123456789'))
 
     return (this_string)
+
+# log = logger()
+# log.add("SELECT * FROM users")
+# log.add("INSERT INTO users VALUES ('123', 2)")
+# log.add("SELECT some_string FROM users")
+# log.save("requests.log")
