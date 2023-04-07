@@ -4,6 +4,8 @@ import json
 import random as rd
 import functions
 
+
+
 class RequestsWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -96,8 +98,8 @@ class RequestsWindow(QWidget):
                             cursor.execute(manual_query)
                             connection.commit()
                         except Exception as e:
-                            print("Ошибка при выполнении запроса:", e)
-
+                            self.log.add(f"Ошибка при выполнении запроса: {e}", _type = "e")
+                            self.log.save("requests.log")
                     else:
                         try:
                             if self.select_checkbox.isChecked():
@@ -214,11 +216,13 @@ class RequestsWindow(QWidget):
                                     connection.commit()
 
                         except Exception as e:
-                            print("Ошибка при выполнении запроса:", e)
+                            self.log.add(f"Ошибка при выполнении запроса: {e}", _type = "e")
+                            self.log.save("requests.log")
             finally:
                 connection.close()
-        except Exception as ex:
-            print(ex)
+        except Exception as e:
+            self.log.add(f"Ошибка при выполнении запроса: {e}", _type = "e")
+            self.log.save("requests.log")
 
     def reset_id(self):
         try:
