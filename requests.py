@@ -3,6 +3,7 @@ import pymysql
 import json
 import random as rd
 import functions
+import time
 
 
 
@@ -95,10 +96,17 @@ class RequestsWindow(QWidget):
                 with connection.cursor() as cursor:
                     if self.method_combobox.currentIndex() == 1:
                         try:
+                            start_time = time.time()
                             cursor.execute(manual_query)
                             connection.commit()
+                            end_time = f"{int((time.time() - start_time) * 1000)} ms"
+                            self.log.add(f"{manual_query}", end_time, _type='h')
+                            self.log.save("requests.log")
+                            result = cursor.fetchall()
+                            self.log.add(result, "0 ms", _type='h')
+                            self.log.save("requests.log")
                         except Exception as e:
-                            self.log.add(f"Ошибка при выполнении запроса: {e}", _type = "e")
+                            self.log.add(f"Ошибка при выполнении запроса: {e}", "0 ms",  _type = "e")
                             self.log.save("requests.log")
                     else:
                         try:
@@ -117,11 +125,13 @@ class RequestsWindow(QWidget):
                                     selected_columns = rd.sample(columns, num_columns)
                                     column_names = ', '.join([column[0] for column in selected_columns])
 
+                                    start_time = time.time()
                                     select_query = f"SELECT {column_names} FROM {table}"
-                                    self.log.add(f"SELECT {column_names} FROM {table}")
                                     cursor.execute(select_query)
                                     result = cursor.fetchall()
-                                    self.log.add(result, _type = "r")
+                                    end_time = f"{int((time.time() - start_time) * 1000)} ms"
+                                    self.log.add(f"SELECT {column_names} FROM {table}", end_time)
+                                    self.log.add(result, "0 ms", _type = "r")
                                     self.log.save("requests.log")
 
                             if self.insert_checkbox.isChecked():
@@ -145,11 +155,13 @@ class RequestsWindow(QWidget):
                                                 values.append(f"'{functions.generate_string()}'")
 
                                         values_str = ', '.join(values)
+                                        start_time = time.time()
                                         insert_query = f"INSERT INTO {table[0]} ({column_names}) VALUES ({values_str})"
-                                        self.log.add(f"INSERT INTO {table[0]} ({column_names}) VALUES ({values_str})")
-                                        self.log.save("requests.log")
                                         cursor.execute(insert_query)
                                         connection.commit()
+                                        end_time = f"{int((time.time() - start_time) * 1000)} ms"
+                                        self.log.add(f"INSERT INTO {table[0]} ({column_names}) VALUES ({values_str})", end_time)
+                                        self.log.save("requests.log")
 
                             if self.update_checkbox.isChecked():
                                 cursor.execute("SHOW TABLES")
@@ -179,11 +191,13 @@ class RequestsWindow(QWidget):
                                         cursor.execute(f"SELECT id FROM {table}")
                                         rows = cursor.fetchall()
                                         if len(rows) > 0:
+                                            start_time = time.time()
                                             id_value = rd.choice(rows)[0]
                                             update_query = f"UPDATE {table} SET {update_str} WHERE id = {id_value}"
-                                            self.log.add(f"UPDATE {table} SET {update_str} WHERE id = {id_value}")
                                             cursor.execute(update_query)
                                             connection.commit()
+                                            end_time = f"{int((time.time() - start_time) * 1000)} ms"
+                                            self.log.add(f"UPDATE {table} SET {update_str} WHERE id = {id_value}", end_time)
                                     self.log.save("requests.log")
 
                             if self.delete_checkbox.isChecked():
@@ -210,18 +224,20 @@ class RequestsWindow(QWidget):
                                     if len(where_conditions) > 0:
                                         where_str = ' AND '.join(where_conditions)
                                         delete_query += f" WHERE {where_str}"
-                                    self.log.add(delete_query)
-                                    self.log.save("requests.log")
+                                    start_time = time.time()
                                     cursor.execute(delete_query)
                                     connection.commit()
+                                    end_time = f"{int((time.time() - start_time) * 1000)} ms"
+                                    self.log.add(delete_query, end_time)
+                                    self.log.save("requests.log")
 
                         except Exception as e:
-                            self.log.add(f"Ошибка при выполнении запроса: {e}", _type = "e")
+                            self.log.add(f"Ошибка при выполнении запроса: {e}", "0 ms", _type = "e")
                             self.log.save("requests.log")
             finally:
                 connection.close()
         except Exception as e:
-            self.log.add(f"Ошибка при выполнении запроса: {e}", _type = "e")
+            self.log.add(f"Ошибка при выполнении запроса: {e}", "0 ms", _type = "e")
             self.log.save("requests.log")
 
     def reset_id(self):
