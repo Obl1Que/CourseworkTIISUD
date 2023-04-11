@@ -4,6 +4,7 @@ from settings import SettingsWindow
 from list_view import LogWindow
 from requests import RequestsWindow
 from documents import DocumentsWindow
+from analyse import AnalyseWindow
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -25,6 +26,9 @@ class MainWindow(QMainWindow):
         self.documents_window = DocumentsWindow()
         self.central_widget.addWidget(self.documents_window)
 
+        self.analyse_window = AnalyseWindow()
+        self.central_widget.addWidget(self.analyse_window)
+
         self.init_ui()
 
     def init_ui(self):
@@ -41,6 +45,7 @@ class MainWindow(QMainWindow):
         documents_action.triggered.connect(lambda: self.central_widget.setCurrentWidget(self.documents_window))
 
         analysis_action = QAction('Анализ', self)
+        analysis_action.triggered.connect(lambda: self.central_widget.setCurrentWidget(self.analyse_window))
 
         menu_bar = self.menuBar()
         menu_bar.setNativeMenuBar(False)
