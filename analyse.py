@@ -53,7 +53,7 @@ class AnalyseWindow(QWidget):
         with open('requests.log', 'r') as file:
             log_data = file.read()
 
-            pattern = r'\[(\d+)\]\[([nerh]+)\]\[(\d+) ms\] .+'
+            pattern = r'\[(\d+)\]\[(update|select|error|h-result|handler|insert)\]\[(\d+) ms\] .+'
 
             for match in re.finditer(pattern, log_data):
                 query_number = int(match.group(1))
