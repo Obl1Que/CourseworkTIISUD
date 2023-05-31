@@ -21,11 +21,13 @@ class LogWindow(QWidget):
         self.table_widget.horizontalHeader().setStretchLastSection(True)
 
         self.table_widget.horizontalHeader().setSectionResizeMode(0, QHeaderView.Interactive)
-        self.table_widget.horizontalHeader().setMaximumSectionSize(50)
+        self.table_widget.setColumnWidth(0, 50)
         self.table_widget.horizontalHeader().setSectionResizeMode(1, QHeaderView.Interactive)
-        self.table_widget.horizontalHeader().setMaximumSectionSize(50)
+        self.table_widget.setColumnWidth(1, 70)
         self.table_widget.horizontalHeader().setSectionResizeMode(2, QHeaderView.Interactive)
-        self.table_widget.horizontalHeader().setMaximumSectionSize(50)
+        self.table_widget.setColumnWidth(2, 50)
+
+        self.table_widget.verticalHeader().setDefaultSectionSize(20)
 
         layout = QVBoxLayout()
         layout.addWidget(self.table_widget)
