@@ -46,7 +46,6 @@ class LogWindow(QWidget):
 
     def refresh_table(self):
         self.table_widget.setRowCount(0)
-
         self.read_logs_and_fill_table()
 
     def clear_table_and_file(self):
@@ -87,7 +86,3 @@ class LogWindow(QWidget):
                 for i in range(4):
                     item = self.table_widget.item(row_position, i)
                     item.setBackground(color)
-
-                self.table_widget.setRowHeight(row_position, 20)
-                self.table_widget.verticalHeader().setDefaultSectionSize(20)
-                self.table_widget.horizontalHeader().setDefaultSectionSize(200)
