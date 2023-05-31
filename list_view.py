@@ -59,7 +59,7 @@ class LogWindow(QWidget):
             logs = f.readlines()
 
         for log in logs:
-            log_match = re.match(r'\[(\d+)\]\[(\w)\]\[(.*)\](.+)', log.strip())
+            log_match = re.match(r'\[(\d+)\]\[(.*)\]\[(.*)\](.+)', log.strip())
             if log_match:
                 log_number, log_type, log_time, log_query = log_match.groups()
                 row_position = self.table_widget.rowCount()
