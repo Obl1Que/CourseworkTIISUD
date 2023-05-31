@@ -87,7 +87,10 @@ class AnalyseWindow(QWidget):
 
         pie_series = QPieSeries()
         for query_type, count in query_type_counts.items():
-            pie_series.append(f"Тип {query_type.upper()}", count)
+            if query_type == "h-result":
+                pie_series.append(f"H-R", count)
+            else:
+                pie_series.append(f"{query_type.upper()[0]}", count)
 
         chart = self.pie_chart.chart()
         chart.removeAllSeries()
@@ -110,16 +113,19 @@ class AnalyseWindow(QWidget):
         heights = [query_type_averages[query_type] for query_type in sorted_query_types]
 
         self.histogram.setOpts(x=x, height=heights)
-        self.add_histogram_labels(x, sorted_query_types)
+        self.add_histogram_labels(x, sorted_query_types, heights)
 
-    def add_histogram_labels(self, x, labels):
+    def add_histogram_labels(self, x, labels, heights):
         for label in self.histogram_labels:
             self.histogram_widget.removeItem(label)
 
         self.histogram_labels.clear()
 
         for x_val, label in zip(x, labels):
-            text_item = TextItem(text=label.upper(), color=(0, 0, 0), anchor=(0.5, 1.0))
+            if label == "h-result":
+                text_item = TextItem(text=f"H-R\n{round(heights[x_val], 2)}", color=(0, 0, 0), anchor=(0.5, 1.0))
+            else:
+                text_item = TextItem(text=f"{label.upper()[0]}\n{round(heights[x_val], 2)}", color=(0, 0, 0), anchor=(0.5, 1.0))
             self.histogram_widget.addItem(text_item)
             text_item.setPos(x_val, 0)
             self.histogram_labels.append(text_item)
