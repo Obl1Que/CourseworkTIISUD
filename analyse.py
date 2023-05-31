@@ -1,7 +1,7 @@
 import re
 import pyqtgraph as pg
 from pyqtgraph import BarGraphItem, TextItem
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel
 from PyQt5.QtGui import QPen
 from PyQt5.QtCore import Qt
 from PyQt5.QtChart import QChart, QChartView, QPieSeries
@@ -29,7 +29,7 @@ class AnalyseWindow(QWidget):
 
         self.histogram_widget = pg.PlotWidget(self)
         self.histogram_widget.setLabel('left', 'Среднее время выполнения (мс)')
-        self.histogram_widget.setLabel('bottom', 'Типы ответов запросов')
+        self.histogram_widget.setLabel('bottom', 'Типы запросов')
         self.histogram_widget.setBackground('w')
         self.histogram_widget.setFixedSize(300, 270)
         self.histogram_widget.move(480, 310)
@@ -43,7 +43,44 @@ class AnalyseWindow(QWidget):
         self.update_btn.setFixedSize(self.width() - 40 - self.pie_chart.width(), 30)
         self.update_btn.move(20, self.height() - 20 - self.update_btn.height())
 
+        self.all_queries = QLabel(self)
+        self.load_stats()
+        self.all_queries.setFixedSize(180, 200)
+        self.all_queries.move(20, 310)
+
         self.parse_logs()
+
+    def load_stats(self):
+        requests = {
+            "error": 0,
+            "s-result": 0,
+            "h-result": 0,
+            "update": 0,
+            "delete": 0,
+            "insert": 0,
+            "handler": 0,
+            "select": 0
+        }
+
+        with open("requests.log") as file:
+            pattern = r'\[\d+\]\[([\w-]+)\]'
+            lines = file.readlines()
+            for line in lines:
+                match = re.search(pattern, line)
+                if match:
+                    query_type = match.group(1)
+                    requests[query_type] += 1
+
+        print(requests, sum(requests.values()))
+        self.all_queries.setText(f"Общее количество запросов: {sum(requests.values())}\n\n"
+                                  f"ERROR:   \t{requests['error']}\n"
+                                  f"UPDATE:  \t{requests['update']}\n"
+                                  f"DELETE:   \t{requests['delete']}\n"
+                                  f"INSERT:   \t{requests['insert']}\n"
+                                  f"SELECT:   \t{requests['select']}\n"
+                                  f"HANDLER:\t{requests['handler']}\n"
+                                  f"S-RESULT:\t{requests['s-result']}\n"
+                                  f"H-RESULT:\t{requests['h-result']}\n")
 
     def parse_logs(self):
         query_numbers = []
@@ -53,7 +90,7 @@ class AnalyseWindow(QWidget):
         with open('requests.log', 'r') as file:
             log_data = file.read()
 
-            pattern = r'\[(\d+)\]\[(update|select|error|h-result|handler|insert)\]\[(\d+) ms\] .+'
+            pattern = r'\[(\d+)\]\[(update|select|error|delete|h-result|s-result|handler|insert)\]\[(\d+) ms\] .+'
 
             for match in re.finditer(pattern, log_data):
                 query_number = int(match.group(1))
@@ -89,6 +126,8 @@ class AnalyseWindow(QWidget):
         for query_type, count in query_type_counts.items():
             if query_type == "h-result":
                 pie_series.append(f"H-R", count)
+            elif query_type == "s-result":
+                pie_series.append(f"S-R", count)
             else:
                 pie_series.append(f"{query_type.upper()[0]}", count)
 
@@ -123,13 +162,16 @@ class AnalyseWindow(QWidget):
 
         for x_val, label in zip(x, labels):
             if label == "h-result":
-                text_item = TextItem(text=f"H-R\n{round(heights[x_val], 2)}", color=(0, 0, 0), anchor=(0.5, 1.0))
+                text_item = TextItem(text=f" H-R\n{round(heights[x_val], 2)}", color=(0, 0, 0), anchor=(0.5, 1.0))
+            elif label == "s-result":
+                text_item = TextItem(text=f" S-R\n{round(heights[x_val], 2)}", color=(0, 0, 0), anchor=(0.5, 1.0))
             else:
-                text_item = TextItem(text=f"{label.upper()[0]}\n{round(heights[x_val], 2)}", color=(0, 0, 0), anchor=(0.5, 1.0))
+                text_item = TextItem(text=f"  {label.upper()[0]}\n{round(heights[x_val], 2)}", color=(0, 0, 0), anchor=(0.5, 1.0))
             self.histogram_widget.addItem(text_item)
             text_item.setPos(x_val, 0)
             self.histogram_labels.append(text_item)
 
 
     def update_grafs(self):
+        self.load_stats()
         self.parse_logs()
