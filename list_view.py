@@ -70,15 +70,21 @@ class LogWindow(QWidget):
                 self.table_widget.setItem(row_position, 2, QTableWidgetItem(log_time))
                 self.table_widget.setItem(row_position, 3, QTableWidgetItem(log_query))
 
-                if log_type == 'e':
+                if log_type == 'error':
                     color = QColor()
-                    color.setNamedColor('#F08080')
-                elif log_type == 'r':
+                    color.setNamedColor('#F34723')
+                elif '-result' in log_type:
                     color = QColor()
                     color.setNamedColor('#98FB98')
-                elif log_type == 'h':
+                elif log_type == 'update':
                     color = QColor()
-                    color.setNamedColor('#EEE8AA')
+                    color.setNamedColor('#FFC618')
+                elif log_type == 'delete':
+                    color = QColor()
+                    color.setNamedColor('#CC5500')
+                elif log_type == 'select' or log_type == 'insert':
+                    color = QColor()
+                    color.setNamedColor('#78DBE2')
                 else:
                     color = QColor()
                     color.setNamedColor('#FFFFFF')
