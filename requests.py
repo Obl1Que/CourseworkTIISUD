@@ -100,13 +100,14 @@ class RequestsWindow(QWidget):
                             cursor.execute(manual_query)
                             connection.commit()
                             end_time = f"{int((time.time() - start_time) * 1000)} ms"
-                            self.log.add(f"{manual_query}", end_time, _type='h')
+                            self.log.add(f"{manual_query}", end_time, _type='handler')
                             self.log.save("requests.log")
                             result = cursor.fetchall()
-                            self.log.add(result, "0 ms", _type='h')
-                            self.log.save("requests.log")
+                            if result != ():
+                                self.log.add(result, "0 ms", _type='h-result')
+                                self.log.save("requests.log")
                         except Exception as e:
-                            self.log.add(f"Ошибка при выполнении запроса: {e}", "0 ms",  _type = "e")
+                            self.log.add(f"Ошибка при выполнении запроса: {e}", "0 ms",  _type = "error")
                             self.log.save("requests.log")
                     else:
                         try:
@@ -130,8 +131,8 @@ class RequestsWindow(QWidget):
                                     cursor.execute(select_query)
                                     result = cursor.fetchall()
                                     end_time = f"{int((time.time() - start_time) * 1000)} ms"
-                                    self.log.add(f"SELECT {column_names} FROM {table}", end_time)
-                                    self.log.add(result, "0 ms", _type = "r")
+                                    self.log.add(f"SELECT {column_names} FROM {table}", end_time, _type="select")
+                                    self.log.add(result, "0 ms", _type = "s-result")
                                     self.log.save("requests.log")
 
                             if self.insert_checkbox.isChecked():
@@ -160,7 +161,7 @@ class RequestsWindow(QWidget):
                                         cursor.execute(insert_query)
                                         connection.commit()
                                         end_time = f"{int((time.time() - start_time) * 1000)} ms"
-                                        self.log.add(f"INSERT INTO {table[0]} ({column_names}) VALUES ({values_str})", end_time)
+                                        self.log.add(f"INSERT INTO {table[0]} ({column_names}) VALUES ({values_str})", end_time, _type="insert")
                                         self.log.save("requests.log")
 
                             if self.update_checkbox.isChecked():
@@ -197,7 +198,7 @@ class RequestsWindow(QWidget):
                                             cursor.execute(update_query)
                                             connection.commit()
                                             end_time = f"{int((time.time() - start_time) * 1000)} ms"
-                                            self.log.add(f"UPDATE {table} SET {update_str} WHERE id = {id_value}", end_time)
+                                            self.log.add(f"UPDATE {table} SET {update_str} WHERE id = {id_value}", end_time, _type="update")
                                     self.log.save("requests.log")
 
                             if self.delete_checkbox.isChecked():
@@ -228,16 +229,16 @@ class RequestsWindow(QWidget):
                                     cursor.execute(delete_query)
                                     connection.commit()
                                     end_time = f"{int((time.time() - start_time) * 1000)} ms"
-                                    self.log.add(delete_query, end_time)
+                                    self.log.add(delete_query, end_time, _type="delete")
                                     self.log.save("requests.log")
 
                         except Exception as e:
-                            self.log.add(f"Ошибка при выполнении запроса: {e}", "0 ms", _type = "e")
+                            self.log.add(f"Ошибка при выполнении запроса: {e}", "0 ms", _type = "error")
                             self.log.save("requests.log")
             finally:
                 connection.close()
         except Exception as e:
-            self.log.add(f"Ошибка при выполнении запроса: {e}", "0 ms", _type = "e")
+            self.log.add(f"Ошибка при выполнении запроса: {e}", "0 ms", _type = "error")
             self.log.save("requests.log")
 
     def reset_id(self):
