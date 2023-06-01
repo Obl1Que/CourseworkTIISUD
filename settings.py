@@ -1,4 +1,3 @@
-import sys
 import json
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton
 
@@ -90,4 +89,3 @@ class SettingsWindow(QWidget):
         self.user_input.clear()
         self.password_input.clear()
         self.database_input.clear()
-

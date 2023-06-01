@@ -71,7 +71,6 @@ class AnalyseWindow(QWidget):
                     query_type = match.group(1)
                     requests[query_type] += 1
 
-        print(requests, sum(requests.values()))
         self.all_queries.setText(f"Общее количество запросов: {sum(requests.values())}\n\n"
                                   f"ERROR:   \t{requests['error']}\n"
                                   f"UPDATE:  \t{requests['update']}\n"

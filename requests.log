@@ -1,0 +1,6 @@
+[1][insert][48 ms] INSERT INTO users (name, money, some_string) VALUES ('dr87rvig5peecd0nu27leqrpi6u02hvhoc5x2lom889asq2ay7bhxuakxdwzt6w3bbkeizabm1t94lohadkqav1df68', 411985, 'uj7wejqcwtjtowul1ivui81v2ihcs8oyoxpud1e2vai3p76rdrbmonc46q')
+[2][select][0 ms] SELECT name FROM users
+[2][s-result][0 ms] (('dr87rvig5peecd0nu27leqrpi6u02hvhoc5x2lom889asq2ay7bhxuakxdwzt6w3bbkeizabm1t94lohadkqav1df68',),)
+[3][update][25 ms] UPDATE users SET some_string = 'test-411i5b3slnginzsycujytdz6036fuoqaqm6lk5gsul78nyqlzknitn8h2pxyzi7ybq', money = 315872 WHERE id = 1
+[4][delete][42 ms] DELETE FROM users WHERE id = 1
+[5][error][0 ms] Ошибка при выполнении запроса: Cannot choose from an empty sequence

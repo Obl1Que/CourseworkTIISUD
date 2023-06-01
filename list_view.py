@@ -2,7 +2,6 @@ from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QVBoxLayout, QHBoxLa
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QColor
 import re
-import os
 
 
 class LogWindow(QWidget):
