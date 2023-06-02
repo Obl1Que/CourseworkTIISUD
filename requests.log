@@ -1,6 +1,15 @@
-[1][insert][48 ms] INSERT INTO users (name, money, some_string) VALUES ('dr87rvig5peecd0nu27leqrpi6u02hvhoc5x2lom889asq2ay7bhxuakxdwzt6w3bbkeizabm1t94lohadkqav1df68', 411985, 'uj7wejqcwtjtowul1ivui81v2ihcs8oyoxpud1e2vai3p76rdrbmonc46q')
-[2][select][0 ms] SELECT name FROM users
-[2][s-result][0 ms] (('dr87rvig5peecd0nu27leqrpi6u02hvhoc5x2lom889asq2ay7bhxuakxdwzt6w3bbkeizabm1t94lohadkqav1df68',),)
-[3][update][25 ms] UPDATE users SET some_string = 'test-411i5b3slnginzsycujytdz6036fuoqaqm6lk5gsul78nyqlzknitn8h2pxyzi7ybq', money = 315872 WHERE id = 1
-[4][delete][42 ms] DELETE FROM users WHERE id = 1
-[5][error][0 ms] Ошибка при выполнении запроса: Cannot choose from an empty sequence
+[1][insert][48 ms] INSERT INTO users (name, money, some_string) VALUES ('y4wtokp8hxz7ykme', 554427, 'yyumnf0fkxknjalv9tdx5d83pkom230ypqy3t74gz0coiwproh9ypz1')
+[2][insert][25 ms] INSERT INTO users (name, money, some_string) VALUES ('rba3egn7svml2iw2a1xp421camr2rnhw76hsudhd7jl09ah1y73y', 958422, 'w6g2bd021jt3bvmi')
+[3][update][53 ms] UPDATE users SET some_string = 'test-fv0tf6k0l69g27o8vgh3uhidi40mr9', money = 731727, name = 'test-k80l1da301fvvuaqg9d14rgryz7' WHERE id = 3
+[5][select][0 ms] SELECT name, money, id FROM users
+[5][s-result][0 ms] (('Artem', 12, 1), ('y4wtokp8hxz7ykme', 554427, 2), ('test-k80l1da301fvvuaqg9d14rgryz7', 731727, 3))
+[6][select][0 ms] SELECT id, name, some_string, money FROM users
+[6][s-result][0 ms] ((1, 'Artem', 'Hello World!', 12), (2, 'y4wtokp8hxz7ykme', 'yyumnf0fkxknjalv9tdx5d83pkom230ypqy3t74gz0coiwproh9ypz1', 554427), (3, 'test-k80l1da301fvvuaqg9d14rgryz7', 'test-fv0tf6k0l69g27o8vgh3uhidi40mr9', 731727))
+[7][handler][0 ms] SELECT money FROM users WHERE id > 1
+[8][h-result][0 ms] ((554427,), (731727,))
+[9][update][30 ms] UPDATE users SET money = 261961, some_string = 'test-6imhp', name = 'test-rqds' WHERE id = 2
+[10][update][9 ms] UPDATE users SET name = 'test-8b2xay9nj1afx78usip0a9q4ovmlzu2kf0e5lnmg6ckv3o' WHERE id = 1
+[11][delete][31 ms] DELETE FROM users WHERE id = 1
+[12][delete][13 ms] DELETE FROM users WHERE id = 3
+[13][delete][6 ms] DELETE FROM users WHERE id = 2
+[14][error][0 ms] Ошибка при выполнении запроса: Cannot choose from an empty sequence

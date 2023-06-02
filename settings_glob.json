@@ -4,5 +4,5 @@
     "user": "root",
     "password": "mysql",
     "database": "toaddb",
-    "log_c": 1
+    "log_c": 15
 }

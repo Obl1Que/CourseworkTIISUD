@@ -20,19 +20,19 @@ class AnalyseWindow(QWidget):
         self.graph.setLabel('left', 'Время выполнения (мс)')
         self.graph.setLabel('bottom', 'Номер запроса')
         self.graph.setBackground('w')
-        self.graph.setFixedSize(440, 270)
+        self.graph.setFixedSize(400, 270)
         self.graph.move(20, 20)
 
         self.pie_chart = self.create_pie_chart()
-        self.pie_chart.setFixedSize(320, 290)
-        self.pie_chart.move(470, 10)
+        self.pie_chart.setFixedSize(360, 290)
+        self.pie_chart.move(430, 10)
 
         self.histogram_widget = pg.PlotWidget(self)
         self.histogram_widget.setLabel('left', 'Среднее время выполнения (мс)')
         self.histogram_widget.setLabel('bottom', 'Типы запросов')
         self.histogram_widget.setBackground('w')
-        self.histogram_widget.setFixedSize(300, 270)
-        self.histogram_widget.move(480, 310)
+        self.histogram_widget.setFixedSize(340, 270)
+        self.histogram_widget.move(440, 310)
 
         self.histogram_labels = []
         self.histogram = BarGraphItem(x=[0, 1, 2, 3], height=[0, 0, 0, 0], width=0.9)
